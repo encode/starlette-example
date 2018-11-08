@@ -6,6 +6,12 @@ import uvicorn
 
 
 def setup_jinja2(template_dir):
+    """
+    Setup a Jinja2 environment, and add `url_for` to the global context.
+
+    For example: `{{ url_for('static', path=...) }}`
+    """
+
     @jinja2.contextfunction
     def url_for(context, name, **path_params):
         request = context['request']
@@ -31,6 +37,9 @@ async def homepage(request):
 
 @app.route('/error')
 async def error(request):
+    """
+    An example error. Switch the `debug` setting to see either tracebacks or 500 pages.
+    """
     raise RuntimeError("Oh no")
 
 
