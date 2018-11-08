@@ -1,7 +1,5 @@
 # An example Starlette application
 
-[View the code](https://github.com/encode/starlette-example/blob/master/app.py)
-
 Install and run:
 
 ```shell
