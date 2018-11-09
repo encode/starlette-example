@@ -1,7 +1,6 @@
 from starlette.applications import Starlette
 from starlette.staticfiles import StaticFiles
 from starlette.responses import HTMLResponse
-import jinja2
 import uvicorn
 
 
