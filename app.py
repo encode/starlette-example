@@ -31,7 +31,7 @@ async def not_found(request, exc):
     """
     template = app.get_template('404.html')
     content = template.render(request=request)
-    return HTMLResponse(content)
+    return HTMLResponse(content, status_code=404)
 
 
 @app.exception_handler(500)
@@ -41,7 +41,7 @@ async def server_error(request, exc):
     """
     template = app.get_template('500.html')
     content = template.render(request=request)
-    return HTMLResponse(content)
+    return HTMLResponse(content, status_code=500)
 
 
 if __name__ == "__main__":
