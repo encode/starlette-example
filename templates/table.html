@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<main role="main">
+  <div class="container">
+    <div class="row pt-3">
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="#">tomchristie</a></li>
+          <li class="breadcrumb-item active">blue-river-1234</li>
+        </ol>
+        </nav>
+      </div>
+    <div class="row">
+      <div class="col-md-6">
+          <form class="form-inline" target=".">
+          <div class="input-group mb-3" style="width: 100%">
+            <input name="search" value="{{ search_term }}" type="search" class="form-control" aria-label="Search" aria-describedby="button-search">
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit" id="button-search">Search</button>
+            </div>
+          </div>
+          </form>
+      </div>
+      <div class="col-md-6">
+        <div style="float: right">
+        <button class="btn btn-outline-dark" type="button" id="button-addon2">Edit Columns</button>
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-outline-dark dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Export
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="#">JSON</a>
+            <a class="dropdown-item" href="#">CSV</a>
+          </div>
+        </div>
+        <button class="btn btn-outline-primary" type="button" id="button-addon2">Add Row</button>
+      </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <table class="table">
+          <thead>
+            <tr>
+              {% for control in column_controls %}
+              <th scope="col" {% if control.is_reverse %}class="dropup"{% endif %}>
+                {% if control.url %}
+                  <a {% if control.is_sorted %}class="dropdown-toggle"{% endif %} href="{{ control.url }}">
+                {% endif %}
+                {{ control.text }}
+                {% if control.url %}
+                  </a>
+                {% endif %}
+              </th>
+                <!-- <button class="btn btn-link dropdown-toggle" style="padding: 0" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Dropdown button
+              </button> -->
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in queryset %}
+            <tr>
+              <th scope="row">{{ item.pk }}</th>
+              <td>{{ item.first }}</td>
+              <td>{{ item.last }}</td>
+              <td>{{ item.handle }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      {% if page_controls %}
+      <div class="col">
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            {% for control in page_controls %}
+            <li class="page-item {% if control.is_disabled %}disabled{% endif %} {% if control.is_active %}active{% endif %}"><a class="page-link" {% if control.url %}href="{{ control.url }}"{% endif %}>{{ control.text }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</main>
+{% endblock %}
