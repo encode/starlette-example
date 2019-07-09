@@ -1,16 +1,16 @@
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
-from starlette.staticfiles import StaticFiles
-from starlette.responses import HTMLResponse
-from starlette.templating import Jinja2Templates
+from starlette.responses import HTMLResponse, RedirectResponse
 import uvicorn
 import math
 
+from .resources import templates, statics
+from .settings import DEBUG
 
-templates = Jinja2Templates(directory='templates')
 
-app = Starlette(debug=True)
-app.mount('/static', StaticFiles(directory='statics'), name='static')
+
+app = Starlette(debug=DEBUG)
+app.mount('/static', statics, name='static')
 
 
 @app.route('/')
@@ -18,6 +18,20 @@ async def homepage(request):
     template = "index.html"
     context = {"request": request}
     return templates.TemplateResponse(template, context)
+
+
+@app.route('/login', methods=['GET', 'POST'])
+async def login(request):
+    if request.method == "GET":
+        template = "login.html"
+        context = {"request": request}
+        return templates.TemplateResponse(template, context)
+    else:
+        assert request.method == "POST"
+        data = await request.form()
+        email = data['email']
+        password = data['password']
+        return RedirectResponse('admin')
 
 
 class User:
@@ -94,7 +108,12 @@ class PaginationControl:
         self.is_disabled = is_disabled
 
 
-@app.route('/tomchristie/blue-river-1234/')
+@app.route('/admin', name='admin')
+async def admin(request):
+    return templates.TemplateResponse('admin.html', context={'request': request})
+
+
+@app.route('/admin/users', name='admin-users')
 class Homepage(HTTPEndpoint):
     PAGE_SIZE = 5
     SEARCH_FIELDS = ('first', 'last', 'handle')

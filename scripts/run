@@ -1,1 +1,1 @@
-venv/bin/python app.py
+venv/bin/uvicorn project.app:app
