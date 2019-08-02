@@ -2,3 +2,6 @@ aiofiles
 jinja2
 starlette
 uvicorn
+# requests and pytest used for testing
+pytest
+requests

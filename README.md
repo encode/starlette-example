@@ -5,8 +5,10 @@ Install and run:
 ```shell
 git clone https://github.com/encode/starlette-example.git
 cd starlette-example
-scripts/install
-scripts/run
+./scripts/install
+./scripts/run
+# to test
+./scripts/test
 ```
 
 Open `http://127.0.0.1:8000/` in your browser:
