@@ -1,3 +1,5 @@
+__ARCHIVED:__ this project is not updated anymore, the Starlette API may have changed in these years
+
 # An example Starlette application
 
 Install and run:
