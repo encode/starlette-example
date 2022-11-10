@@ -1,24 +1,21 @@
 from starlette.applications import Starlette
+from starlette.exceptions import HTTPException
+from starlette.requests import Request
 from starlette.staticfiles import StaticFiles
-from starlette.responses import HTMLResponse
+from starlette.routing import Route, Mount
 from starlette.templating import Jinja2Templates
 import uvicorn
 
 
 templates = Jinja2Templates(directory='templates')
 
-app = Starlette(debug=True)
-app.mount('/static', StaticFiles(directory='statics'), name='static')
 
-
-@app.route('/')
 async def homepage(request):
     template = "index.html"
     context = {"request": request}
     return templates.TemplateResponse(template, context)
 
 
-@app.route('/error')
 async def error(request):
     """
     An example error. Switch the `debug` setting to see either tracebacks or 500 pages.
@@ -26,8 +23,7 @@ async def error(request):
     raise RuntimeError("Oh no")
 
 
-@app.exception_handler(404)
-async def not_found(request, exc):
+async def not_found(request: Request, exc: HTTPException):
     """
     Return an HTTP 404 page.
     """
@@ -36,8 +32,7 @@ async def not_found(request, exc):
     return templates.TemplateResponse(template, context, status_code=404)
 
 
-@app.exception_handler(500)
-async def server_error(request, exc):
+async def server_error(request: Request, exc: HTTPException):
     """
     Return an HTTP 500 page.
     """
@@ -45,6 +40,20 @@ async def server_error(request, exc):
     context = {"request": request}
     return templates.TemplateResponse(template, context, status_code=500)
 
+routes = [
+    Route('/', homepage),
+    Route('/error', error),
+    Mount('/static', app=StaticFiles(directory='statics'), name='static')
+]
+
+exception_handlers = {
+    404: not_found,
+    500: server_error
+}
+
+app = Starlette(debug=True, routes=routes, exception_handlers=exception_handlers)
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=8000)
+    
